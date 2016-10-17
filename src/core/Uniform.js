@@ -13,6 +13,8 @@ function Uniform( value ) {
 
 	this.value = value;
 
+	this.needsRefresh = false;
+
 }
 
 export { Uniform };

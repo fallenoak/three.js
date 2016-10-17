@@ -1962,6 +1962,15 @@ function WebGLRenderer( parameters ) {
 		}
 
 
+		// dynamic uniforms
+
+		// onBeforeRender enables uniform changes independent of
+		// switching materials and programs; this code path ensures
+		// uniforms marked as needing an update are sent to the GPU
+
+		updateDynamicUniforms( p_uniforms, m_uniforms );
+
+
 		// common matrices
 
 		p_uniforms.set( _gl, object, 'modelViewMatrix' );
@@ -1969,6 +1978,24 @@ function WebGLRenderer( parameters ) {
 		p_uniforms.setValue( _gl, 'modelMatrix', object.matrixWorld );
 
 		return program;
+
+	}
+
+	function updateDynamicUniforms( p_uniforms, m_uniforms ) {
+
+		var names = Object.keys( m_uniforms );
+
+		for ( var i = 0, l = names.length; i < l; i ++ ) {
+
+			var name = names[ i ];
+			var uniform = m_uniforms[ name ];
+
+			if ( uniform.needsRefresh !== true ) {
+				continue;
+			}
+
+			p_uniforms.setValue( _gl, name, uniform.value );
+		}
 
 	}
 
